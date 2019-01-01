@@ -1,7 +1,11 @@
+from __future__ import print_function
 import sys,os
 import curses
+import time
+from pymavlink import mavutil
+from argparse import ArgumentParser
 
-def draw_menu(stdscr):
+def draw_menu(stdscr, args):
     k = 0
     cursor_x = 0
     cursor_y = 0
@@ -15,6 +19,10 @@ def draw_menu(stdscr):
     curses.init_pair(1, curses.COLOR_CYAN, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)
     curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE)
+
+    # create a mavlink serial instance
+    master = mavutil.mavlink_connection(args.device, baud=args.baudrate)
+
 
     # Loop where k is the last character pressed
     while (k != ord('q')):
@@ -86,7 +94,12 @@ def draw_menu(stdscr):
         k = stdscr.getch()
 
 def main():
-    curses.wrapper(draw_menu)
+    parser = ArgumentParser(description=__doc__)
+    parser.add_argument("--baudrate", type=int,
+                  help="master port baud rate", default=115200)
+    parser.add_argument("--device", required=True, help="serial device")
+    args = parser.parse_args()
+    curses.wrapper(draw_menu, args)
 
 if __name__ == "__main__":
     main()
