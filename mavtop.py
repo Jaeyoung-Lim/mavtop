@@ -70,21 +70,20 @@ def draw_menu(stdscr, args):
         stdscr.attroff(curses.color_pair(3))
         
         # Render Table header
+        table_y = int((height // 2) - 2)
         tableheaderstr = "SYS_ID  MAV_TYPE  MAV_AUTOPILOT  MAV_MODE_FLAG MAV_STATUS".format(cursor_x, cursor_y)
-
         stdscr.attron(curses.color_pair(3))
-        stdscr.addstr(int((height // 2) - 2), 0, tableheaderstr)
-        stdscr.addstr(int((height // 2) - 2), len(tableheaderstr), " " * (width - len(tableheaderstr) - 1))
+        stdscr.addstr(table_y, 0, tableheaderstr)
+        stdscr.addstr(table_y, len(tableheaderstr), " " * (width - len(tableheaderstr) - 1))
         stdscr.attroff(curses.color_pair(3))
 
         # Render values of tables
-        mav1str = "     1  FIXEDWING FMU-V5         ARMED       ARMED     ".format(cursor_x, cursor_y)
-
-        stdscr.attron(curses.color_pair(1))
-        stdscr.addstr(int((height // 2) - 2)+1, 0, mav1str)
-        stdscr.addstr(int((height // 2) - 2)+1, len(mav1str), " " * (width - len(mav1str) - 1))
-        stdscr.attroff(curses.color_pair(3))
-
+        for mav_count in range (1, 4):
+            mav1str = "     1  FIXEDWING FMU-V5         ARMED       ARMED     ".format(cursor_x, cursor_y)
+            stdscr.attron(curses.color_pair(1))
+            stdscr.addstr(table_y + mav_count, 0, mav1str)
+            stdscr.addstr(table_y + mav_count, len(mav1str), " " * (width - len(mav1str) - 1))
+            stdscr.attroff(curses.color_pair(3))
 
         # Turning on attributes for title
         stdscr.attron(curses.color_pair(2))
