@@ -72,11 +72,17 @@ def draw_menu(stdscr, args):
         # Render Table header
         tableheaderstr = "SYS_ID  MAV_TYPE  MAV_AUTOPILOT  MAV_MODE_FLAG MAV_STATUS".format(cursor_x, cursor_y)
 
-
-
         stdscr.attron(curses.color_pair(3))
         stdscr.addstr(int((height // 2) - 2), 0, tableheaderstr)
         stdscr.addstr(int((height // 2) - 2), len(tableheaderstr), " " * (width - len(tableheaderstr) - 1))
+        stdscr.attroff(curses.color_pair(3))
+
+        # Render values of tables
+        mav1str = "     1  FIXEDWING FMU-V5         ARMED       ARMED     ".format(cursor_x, cursor_y)
+
+        stdscr.attron(curses.color_pair(1))
+        stdscr.addstr(int((height // 2) - 2)+1, 0, mav1str)
+        stdscr.addstr(int((height // 2) - 2)+1, len(mav1str), " " * (width - len(mav1str) - 1))
         stdscr.attroff(curses.color_pair(3))
 
 
