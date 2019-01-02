@@ -21,8 +21,6 @@ def draw_menu(stdscr, args):
     curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE)
 
     # create a mavlink serial instance
-    master = mavutil.mavlink_connection(args.device, baud=args.baudrate)
-
 
     # Loop where k is the last character pressed
     while (k != ord('q')):
@@ -51,6 +49,7 @@ def draw_menu(stdscr, args):
         subtitle = "Written by Jaeyoung Lim"[:width-1]
         keystr = "Last key pressed: {}".format(k)[:width-1]
         statusbarstr = "Press 'q' to exit | STATUS BAR | Pos: {}, {}".format(cursor_x, cursor_y)
+
         if k == 0:
             keystr = "No key press detected..."[:width-1]
 
@@ -58,7 +57,7 @@ def draw_menu(stdscr, args):
         start_x_title = int((width // 2) - (len(title) // 2) - len(title) % 2)
         start_x_subtitle = int((width // 2) - (len(subtitle) // 2) - len(subtitle) % 2)
         start_x_keystr = int((width // 2) - (len(keystr) // 2) - len(keystr) % 2)
-        start_y = int((height // 2) - 2)
+        start_y = int((height // 2) - 10)
 
         # Rendering some text
         whstr = "Width: {}, Height: {}".format(width, height)
@@ -69,6 +68,17 @@ def draw_menu(stdscr, args):
         stdscr.addstr(height-1, 0, statusbarstr)
         stdscr.addstr(height-1, len(statusbarstr), " " * (width - len(statusbarstr) - 1))
         stdscr.attroff(curses.color_pair(3))
+        
+        # Render Table header
+        tableheaderstr = "SYS_ID  MAV_TYPE  MAV_AUTOPILOT  MAV_MODE_FLAG MAV_STATUS".format(cursor_x, cursor_y)
+
+
+
+        stdscr.attron(curses.color_pair(3))
+        stdscr.addstr(int((height // 2) - 2), 0, tableheaderstr)
+        stdscr.addstr(int((height // 2) - 2), len(tableheaderstr), " " * (width - len(tableheaderstr) - 1))
+        stdscr.attroff(curses.color_pair(3))
+
 
         # Turning on attributes for title
         stdscr.attron(curses.color_pair(2))
@@ -97,8 +107,10 @@ def main():
     parser = ArgumentParser(description=__doc__)
     parser.add_argument("--baudrate", type=int,
                   help="master port baud rate", default=115200)
-    parser.add_argument("--device", required=True, help="serial device")
+    parser.add_argument("--device", required=False, help="serial device")
     args = parser.parse_args()
+    master = mavutil.mavlink_connection('udpin:0.0.0.0:14550')
+
     curses.wrapper(draw_menu, args)
 
 if __name__ == "__main__":
