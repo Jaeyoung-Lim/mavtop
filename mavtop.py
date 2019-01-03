@@ -4,8 +4,9 @@ import curses
 import time
 from pymavlink import mavutil
 from argparse import ArgumentParser
+from Vehicle import Vehicle
 
-def draw_menu(stdscr, args):
+def draw_menu(stdscr, list):
     k = 0
     cursor_x = 0
     cursor_y = 0
@@ -79,7 +80,7 @@ def draw_menu(stdscr, args):
 
         # Render values of tables
         for mav_count in range (1, 4):
-            mav1str = "     1  FIXEDWING FMU-V5         ARMED       ARMED     ".format(cursor_x, cursor_y)
+            mav1str = str(list.sys_id) + "  FIXEDWING FMU-V5         ARMED       ARMED     ".format(cursor_x, cursor_y)
             stdscr.attron(curses.color_pair(1))
             stdscr.addstr(table_y + mav_count, 0, mav1str)
             stdscr.addstr(table_y + mav_count, len(mav1str), " " * (width - len(mav1str) - 1))
@@ -116,7 +117,9 @@ def main():
     args = parser.parse_args()
     master = mavutil.mavlink_connection('udpin:0.0.0.0:14550')
 
-    curses.wrapper(draw_menu, args)
+    vehicle_list = Vehicle()
+
+    curses.wrapper(draw_menu, vehicle_list)
 
 if __name__ == "__main__":
     main()
