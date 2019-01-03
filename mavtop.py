@@ -79,8 +79,8 @@ def draw_menu(stdscr, list):
         stdscr.attroff(curses.color_pair(3))
 
         # Render values of tables
-        for mav_count in range (1, 4):
-            mav1str = str(list.sys_id) + "  FIXEDWING FMU-V5         ARMED       ARMED     ".format(cursor_x, cursor_y)
+        for mav_count in range (1, len(list)):
+            mav1str = str(list[mav_count].sys_id) + "  FIXEDWING FMU-V5         ARMED       ARMED     ".format(cursor_x, cursor_y)
             stdscr.attron(curses.color_pair(1))
             stdscr.addstr(table_y + mav_count, 0, mav1str)
             stdscr.addstr(table_y + mav_count, len(mav1str), " " * (width - len(mav1str) - 1))
@@ -116,8 +116,11 @@ def main():
     parser.add_argument("--device", required=False, help="serial device")
     args = parser.parse_args()
     master = mavutil.mavlink_connection('udpin:0.0.0.0:14550')
+    vehicle_list = []
 
-    vehicle_list = Vehicle()
+    vehicle = Vehicle()
+    vehicle_list.append(vehicle)
+    vehicle_list.append(vehicle)
 
     curses.wrapper(draw_menu, vehicle_list)
 
