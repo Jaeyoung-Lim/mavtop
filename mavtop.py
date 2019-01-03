@@ -79,11 +79,11 @@ def draw_menu(stdscr, list):
         stdscr.attroff(curses.color_pair(3))
 
         # Render values of tables
-        for mav_count in range (1, len(list)):
-            mav1str = str(list[mav_count].sys_id) + "  FIXEDWING FMU-V5         ARMED       ARMED     ".format(cursor_x, cursor_y)
+        for mav_count in range (0, len(list)):
+            mav1str = str(list[mav_count].sys_id) + "  " + str(list[mav_count].mav_type) + "  " + str(list[mav_count].mav_autopilot) + "  " + str(list[mav_count].mav_mode_flag) + "  " + str(list[mav_count].mav_state) + "  " + str(list[mav_count].mavlink_version) + "".format(cursor_x, cursor_y)
             stdscr.attron(curses.color_pair(1))
-            stdscr.addstr(table_y + mav_count, 0, mav1str)
-            stdscr.addstr(table_y + mav_count, len(mav1str), " " * (width - len(mav1str) - 1))
+            stdscr.addstr(table_y + mav_count + 1, 0, mav1str)
+            stdscr.addstr(table_y + mav_count + 1, len(mav1str), " " * (width - len(mav1str) - 1))
             stdscr.attroff(curses.color_pair(3))
 
         # Turning on attributes for title
