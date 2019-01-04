@@ -1,7 +1,12 @@
+from __future__ import print_function
 import sys,os
 import curses
+import time
+from pymavlink import mavutil
+from argparse import ArgumentParser
+from Vehicle import Vehicle
 
-def draw_menu(stdscr):
+def draw_menu(stdscr, list):
     k = 0
     cursor_x = 0
     cursor_y = 0
@@ -15,6 +20,8 @@ def draw_menu(stdscr):
     curses.init_pair(1, curses.COLOR_CYAN, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)
     curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE)
+
+    # create a mavlink serial instance
 
     # Loop where k is the last character pressed
     while (k != ord('q')):
@@ -43,6 +50,7 @@ def draw_menu(stdscr):
         subtitle = "Written by Jaeyoung Lim"[:width-1]
         keystr = "Last key pressed: {}".format(k)[:width-1]
         statusbarstr = "Press 'q' to exit | STATUS BAR | Pos: {}, {}".format(cursor_x, cursor_y)
+
         if k == 0:
             keystr = "No key press detected..."[:width-1]
 
@@ -50,7 +58,7 @@ def draw_menu(stdscr):
         start_x_title = int((width // 2) - (len(title) // 2) - len(title) % 2)
         start_x_subtitle = int((width // 2) - (len(subtitle) // 2) - len(subtitle) % 2)
         start_x_keystr = int((width // 2) - (len(keystr) // 2) - len(keystr) % 2)
-        start_y = int((height // 2) - 2)
+        start_y = int((height // 2) - 10)
 
         # Rendering some text
         whstr = "Width: {}, Height: {}".format(width, height)
@@ -61,6 +69,22 @@ def draw_menu(stdscr):
         stdscr.addstr(height-1, 0, statusbarstr)
         stdscr.addstr(height-1, len(statusbarstr), " " * (width - len(statusbarstr) - 1))
         stdscr.attroff(curses.color_pair(3))
+        
+        # Render Table header
+        table_y = int((height // 2) - 2)
+        tableheaderstr = "SYS_ID  MAV_TYPE  MAV_AUTOPILOT  MAV_MODE_FLAG MAV_STATUS".format(cursor_x, cursor_y)
+        stdscr.attron(curses.color_pair(3))
+        stdscr.addstr(table_y, 0, tableheaderstr)
+        stdscr.addstr(table_y, len(tableheaderstr), " " * (width - len(tableheaderstr) - 1))
+        stdscr.attroff(curses.color_pair(3))
+
+        # Render values of tables
+        for mav_count in range (0, len(list)):
+            mav1str = str(list[mav_count].sys_id) + "  " + str(list[mav_count].mav_type) + "  " + str(list[mav_count].mav_autopilot) + "  " + str(list[mav_count].mav_mode_flag) + "  " + str(list[mav_count].mav_state) + "  " + str(list[mav_count].mavlink_version) + "".format(cursor_x, cursor_y)
+            stdscr.attron(curses.color_pair(1))
+            stdscr.addstr(table_y + mav_count + 1, 0, mav1str)
+            stdscr.addstr(table_y + mav_count + 1, len(mav1str), " " * (width - len(mav1str) - 1))
+            stdscr.attroff(curses.color_pair(3))
 
         # Turning on attributes for title
         stdscr.attron(curses.color_pair(2))
@@ -86,7 +110,19 @@ def draw_menu(stdscr):
         k = stdscr.getch()
 
 def main():
-    curses.wrapper(draw_menu)
+    parser = ArgumentParser(description=__doc__)
+    parser.add_argument("--baudrate", type=int,
+                  help="master port baud rate", default=115200)
+    parser.add_argument("--device", required=False, help="serial device")
+    args = parser.parse_args()
+    master = mavutil.mavlink_connection('udpin:0.0.0.0:14550')
+    vehicle_list = []
+
+    vehicle = Vehicle()
+    vehicle_list.append(vehicle)
+    vehicle_list.append(vehicle)
+
+    curses.wrapper(draw_menu, vehicle_list)
 
 if __name__ == "__main__":
     main()
