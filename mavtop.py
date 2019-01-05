@@ -6,7 +6,15 @@ from pymavlink import mavutil
 from argparse import ArgumentParser
 from Vehicle import Vehicle
 
-def draw_menu(stdscr, list):
+def findvehicle(id, list):
+    for i in range(0, len(list)):
+      if (id == list[i].sys_id):
+        return i
+    return -1
+
+def draw_menu(stdscr, connection):
+    list = []
+    msg = []
     k = 0
     cursor_x = 0
     cursor_y = 0
@@ -109,6 +117,24 @@ def draw_menu(stdscr, list):
         # Wait for next input
         k = stdscr.getch()
 
+        if msg : # Read mavlink heartbeat if there is a message
+            msg = connection.recv_match(type='HEARTBEAT', blocking=True)
+            vehicle_id = findvehicle(sys_id, list)
+            sys_id = msg.target_system
+            sys_status = msg.system_status
+            mav_type = 0
+            mav_autopilot = 0
+            mav_mode_flag = 128
+            mav_state = 1
+            mavlink_version = 2
+
+            if vehicle_id < 0 :
+                vehicle = Vehicle(sys_id, mav_type, mav_autopilot, mav_mode_flag, mav_state, mavlink_version) # Create vehicle object if the vehicle was not seen before
+                list.append(vehicle)
+            else :
+                list[vehicle_id].sys_id = msg.target_system
+                list[vehicle_id].mav_state = msg.system_status
+
 def main():
     parser = ArgumentParser(description=__doc__)
     parser.add_argument("--baudrate", type=int,
@@ -116,13 +142,8 @@ def main():
     parser.add_argument("--device", required=False, help="serial device")
     args = parser.parse_args()
     master = mavutil.mavlink_connection('udpin:0.0.0.0:14550')
-    vehicle_list = []
-
-    vehicle = Vehicle()
-    vehicle_list.append(vehicle)
-    vehicle_list.append(vehicle)
-
-    curses.wrapper(draw_menu, vehicle_list)
+    
+    curses.wrapper(draw_menu, master)
 
 if __name__ == "__main__":
     main()
