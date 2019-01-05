@@ -116,24 +116,26 @@ def draw_menu(stdscr, connection):
 
         # Wait for next input
         k = stdscr.getch()
+        msg = 1
 
         if msg : # Read mavlink heartbeat if there is a message
             msg = connection.recv_match(type='HEARTBEAT', blocking=True)
+            sys_id = 1
             vehicle_id = findvehicle(sys_id, list)
-            sys_id = msg.target_system
             sys_status = msg.system_status
-            mav_type = 0
-            mav_autopilot = 0
-            mav_mode_flag = 128
+            mav_type = msg.type
+            mav_autopilot = msg.autopilot
+            mav_mode_flag = msg.base_mode
             mav_state = 1
-            mavlink_version = 2
+            mavlink_version = msg.mavlink_version
 
             if vehicle_id < 0 :
                 vehicle = Vehicle(sys_id, mav_type, mav_autopilot, mav_mode_flag, mav_state, mavlink_version) # Create vehicle object if the vehicle was not seen before
                 list.append(vehicle)
-            else :
-                list[vehicle_id].sys_id = msg.target_system
+            else:
+                list[vehicle_id].sys_id = 1
                 list[vehicle_id].mav_state = msg.system_status
+
 
 def main():
     parser = ArgumentParser(description=__doc__)
