@@ -49,32 +49,12 @@ def draw_menu(stdscr):
         cursor_y = screen.getCursor()
         cursor_x = screen.getCursorX()
 
-        # Declaration of strings
-        title = "MAVTOP"[:width-1]
-
-
-        # Centering calculations
-        start_x_title = int((width // 2) - (len(title) // 2) - len(title) % 2)
-        start_y = 0
-
         # Render Elements
         screen.drawHeader(stdscr, list)
         screen.drawTable(stdscr, list)
         screen.drawStatusBar(stdscr)
 
-        # Turning on attributes for title
-        stdscr.attron(curses.color_pair(2))
-        stdscr.attron(curses.A_BOLD)
-
-        # Rendering title
-        stdscr.addstr(start_y, start_x_title, title)
-
-        # Turning off attributes for title
-        stdscr.attroff(curses.color_pair(2))
-        stdscr.attroff(curses.A_BOLD)
-
         # Print rest of text
-        stdscr.addstr(start_y + 3, (width // 2) - 2, '-' * 4)
         stdscr.move(cursor_y, cursor_x)
 
         # Refresh the screen

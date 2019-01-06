@@ -53,6 +53,20 @@ class Screen:
 
 
     def drawHeader(self, stdscr, list):
+        # Declaration of strings
+        title = "MAVTOP"[:self.screen_width - 1]
+
+        # Turning on attributes for title
+        stdscr.attron(curses.color_pair(2))
+        stdscr.attron(curses.A_BOLD)
+
+        # Rendering title
+        stdscr.addstr(0, self.screen_width - (len(title) // 2) - len(title), title)
+
+        # Turning off attributes for title
+        stdscr.attroff(curses.color_pair(2))
+        stdscr.attroff(curses.A_BOLD)
+
         # Rendering some text
         whstr = "Width: {}, Height: {}".format(self.screen_width, self.screen_height)
         stdscr.addstr(0, 0, whstr, curses.color_pair(1))
