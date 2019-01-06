@@ -85,7 +85,7 @@ def draw_menu(stdscr):
         
         # Render Table header
         table_y = int((height // 2) - 2)
-        tableheaderstr = " SYS_ID  TYPE  AUTOPILOT  MODE  STATUS  VERSION".format(cursor_x, cursor_y)
+        tableheaderstr = " SYS_ID  TYPE       AUTOPILOT  MODE        STATUS     VERSION".format(cursor_x, cursor_y)
         stdscr.attron(curses.color_pair(3))
         stdscr.addstr(table_y, 0, tableheaderstr)
         stdscr.addstr(table_y, len(tableheaderstr), " " * (width - len(tableheaderstr) - 1))
@@ -98,7 +98,7 @@ def draw_menu(stdscr):
 
         # Render values of tables
         for mav_count in range (0, len(list)):
-            mav1str = " "+ str(list[mav_count].sys_id) + "       " + str(list[mav_count].mav_type) + "     " + str(list[mav_count].mav_autopilot) + "         " + str(list[mav_count].mav_mode_flag) + "    " + str(list[mav_count].mav_state) + "       " + str(list[mav_count].mavlink_version) + "".format(cursor_x, cursor_y)
+            mav1str = " "+ str(list[mav_count].sys_id) + "       " + str(list[mav_count].getTypeString()) + "  " + str(list[mav_count].getAutopilotString()) + "        " + str(list[mav_count].getModeString()) + "   " + str(list[mav_count].getStatusString()) + "    " + str(list[mav_count].mavlink_version) + "".format(cursor_x, cursor_y)
             stdscr.attron(curses.color_pair(1))
             stdscr.addstr(table_y + mav_count + 1, 0, mav1str)
             stdscr.addstr(table_y + mav_count + 1, len(mav1str), " " * (width - len(mav1str) - 1))
@@ -134,17 +134,17 @@ def mavlinkThread():
 
     while True:
         msg = connection.recv_match(type='HEARTBEAT', blocking=True)
+
         sys_id = 1
         vehicle_id = findvehicle(sys_id, list)
         sys_status = msg.system_status
         mav_type = msg.type
         mav_autopilot = msg.autopilot
         mav_mode_flag = msg.base_mode
-        mav_state = 1
         mavlink_version = msg.mavlink_version
 
         if vehicle_id < 0 :
-            vehicle = Vehicle(sys_id, mav_type, mav_autopilot, mav_mode_flag, mav_state, mavlink_version) # Create vehicle object if the vehicle was not seen before
+            vehicle = Vehicle(sys_id, mav_type, mav_autopilot, mav_mode_flag, sys_status, mavlink_version) # Create vehicle object if the vehicle was not seen before
             list.append(vehicle)
         else:
             list[vehicle_id].sys_id = 1
