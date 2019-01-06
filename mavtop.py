@@ -31,6 +31,7 @@ def draw_menu(stdscr):
     curses.init_pair(1, curses.COLOR_CYAN, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)
     curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE)
+    curses.init_pair(4, curses.COLOR_BLACK, curses.COLOR_CYAN)
 
     # Loop where k is the last character pressed
     while (k != ord('q')):
@@ -49,9 +50,6 @@ def draw_menu(stdscr):
         screen.drawHeader(stdscr, list)
         screen.drawTable(stdscr, list)
         screen.drawStatusBar(stdscr)
-
-        # Print rest of text
-        stdscr.move(cursor_y, cursor_x)
 
         # Refresh the screen
         stdscr.refresh()

@@ -32,6 +32,9 @@ class Screen:
         self.cursor = min(self.screen_height - 2, self.cursor)
 
         stdscr.move(self.cursor, self.cursor_x)
+        stdscr.attron(curses.color_pair(4))
+        stdscr.addstr(self.cursor, 0, " " * self.screen_width)
+        stdscr.attroff(curses.color_pair(4))
 
 
     def getCursor(self):
