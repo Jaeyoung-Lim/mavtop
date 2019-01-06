@@ -6,13 +6,3 @@ class Vehicle:
         self.mav_mode_flag = mav_mode_flag
         self.mav_state = mav_state
         self.mavlink_version = mavlink_version
-
-    # def __init__(self, id, type, autopilot, mode_flag, state, version):
-    # 	self.sys_id = id
-    #     self.mav_type = type
-    #     self.mav_autopilot = autopilot
-    #     self.mav_mode_flag = mode_flag
-    #     self.mav_state = state
-    #     self.mavlink_version = version
-
-
