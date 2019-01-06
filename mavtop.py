@@ -8,7 +8,6 @@ from argparse import ArgumentParser
 from Vehicle import Vehicle
 from Screen import Screen
 
-k = 0
 list = []
 
 def findvehicle(id, list):
@@ -18,7 +17,7 @@ def findvehicle(id, list):
     return -1
 
 def draw_menu(stdscr):
-    global k
+    k = 0
     global list
 
     screen = Screen()
@@ -26,15 +25,12 @@ def draw_menu(stdscr):
     # Clear and refresh the screen for a blank canvas
     stdscr.clear()
     stdscr.refresh()
-    # stdscr.nodelay(1)
 
     # Start colors in curses
     curses.start_color()
     curses.init_pair(1, curses.COLOR_CYAN, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)
     curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE)
-
-    # create a mavlink serial instance
 
     # Loop where k is the last character pressed
     while (k != ord('q')):
