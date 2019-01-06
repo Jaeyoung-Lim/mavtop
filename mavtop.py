@@ -91,6 +91,11 @@ def draw_menu(stdscr):
         stdscr.addstr(table_y, len(tableheaderstr), " " * (width - len(tableheaderstr) - 1))
         stdscr.attroff(curses.color_pair(3))
 
+        num_mav = len(list)
+        num_mav_str = "Number of Vehicles : " + str(num_mav).format(cursor_x, cursor_y)
+        stdscr.addstr(table_y-1, 0, num_mav_str)
+
+
         # Render values of tables
         for mav_count in range (0, len(list)):
             mav1str = str(list[mav_count].sys_id) + "  " + str(list[mav_count].mav_type) + "  " + str(list[mav_count].mav_autopilot) + "  " + str(list[mav_count].mav_mode_flag) + "  " + str(list[mav_count].mav_state) + "  " + str(list[mav_count].mavlink_version) + "".format(cursor_x, cursor_y)
