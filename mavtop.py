@@ -85,7 +85,7 @@ def draw_menu(stdscr):
         
         # Render Table header
         table_y = int((height // 2) - 2)
-        tableheaderstr = "SYS_ID  MAV_TYPE  MAV_AUTOPILOT  MAV_MODE_FLAG MAV_STATUS".format(cursor_x, cursor_y)
+        tableheaderstr = " SYS_ID  TYPE  AUTOPILOT  MODE  STATUS  VERSION".format(cursor_x, cursor_y)
         stdscr.attron(curses.color_pair(3))
         stdscr.addstr(table_y, 0, tableheaderstr)
         stdscr.addstr(table_y, len(tableheaderstr), " " * (width - len(tableheaderstr) - 1))
@@ -98,7 +98,7 @@ def draw_menu(stdscr):
 
         # Render values of tables
         for mav_count in range (0, len(list)):
-            mav1str = str(list[mav_count].sys_id) + "  " + str(list[mav_count].mav_type) + "  " + str(list[mav_count].mav_autopilot) + "  " + str(list[mav_count].mav_mode_flag) + "  " + str(list[mav_count].mav_state) + "  " + str(list[mav_count].mavlink_version) + "".format(cursor_x, cursor_y)
+            mav1str = " "+ str(list[mav_count].sys_id) + "       " + str(list[mav_count].mav_type) + "     " + str(list[mav_count].mav_autopilot) + "         " + str(list[mav_count].mav_mode_flag) + "    " + str(list[mav_count].mav_state) + "       " + str(list[mav_count].mavlink_version) + "".format(cursor_x, cursor_y)
             stdscr.attron(curses.color_pair(1))
             stdscr.addstr(table_y + mav_count + 1, 0, mav1str)
             stdscr.addstr(table_y + mav_count + 1, len(mav1str), " " * (width - len(mav1str) - 1))
