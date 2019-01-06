@@ -128,31 +128,27 @@ def draw_menu(stdscr):
         k = stdscr.getch()
 
 def mavlinkThread():
-    master = mavutil.mavlink_connection('udpin:0.0.0.0:14550')
+    connection = mavutil.mavlink_connection('udpin:0.0.0.0:14550')
 
     global list
-    msg = []
 
     while True:
-        if msg : # Read mavlink heartbeat if there is a message
-            msg = connection.recv_match(type='HEARTBEAT', blocking=True)
-            sys_id = 1
-            vehicle_id = findvehicle(sys_id, list)
-            sys_status = msg.system_status
-            mav_type = msg.type
-            mav_autopilot = msg.autopilot
-            mav_mode_flag = msg.base_mode
-            mav_state = 1
-            mavlink_version = msg.mavlink_version
+        msg = connection.recv_match(type='HEARTBEAT', blocking=True)
+        sys_id = 1
+        vehicle_id = findvehicle(sys_id, list)
+        sys_status = msg.system_status
+        mav_type = msg.type
+        mav_autopilot = msg.autopilot
+        mav_mode_flag = msg.base_mode
+        mav_state = 1
+        mavlink_version = msg.mavlink_version
 
-            if vehicle_id < 0 :
-                vehicle = Vehicle(sys_id, mav_type, mav_autopilot, mav_mode_flag, mav_state, mavlink_version) # Create vehicle object if the vehicle was not seen before
-                list.append(vehicle)
-            else:
-                list[vehicle_id].sys_id = 1
-                list[vehicle_id].mav_state = msg.system_status
-
-
+        if vehicle_id < 0 :
+            vehicle = Vehicle(sys_id, mav_type, mav_autopilot, mav_mode_flag, mav_state, mavlink_version) # Create vehicle object if the vehicle was not seen before
+            list.append(vehicle)
+        else:
+            list[vehicle_id].sys_id = 1
+            list[vehicle_id].mav_state = msg.system_status
 
 def main():
     parser = ArgumentParser(description=__doc__)
