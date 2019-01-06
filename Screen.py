@@ -28,8 +28,10 @@ class Screen:
 
         self.cursor_x = max(0, self.cursor_x)
         self.cursor_x = min(self.screen_width - 1, self.cursor_x)
-        self.cursor = max(0, self.cursor)
-        self.cursor = min(self.screen_height - 1, self.cursor)
+        self.cursor = max(self.tablestart_row + 1, self.cursor)
+        self.cursor = min(self.screen_height - 2, self.cursor)
+
+        stdscr.move(self.cursor, self.cursor_x)
 
 
     def getCursor(self):
