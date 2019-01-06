@@ -8,6 +8,7 @@ class Screen:
         self.screen_height = 24
         self.screen_width = 24
         self.key = 0
+        self.table_attr =["SYSID", "TYPE", "AUTOPILOT", "STATUS", "VERSION"]
 
     def setSize(self, height, width):
         self.screen_height = height
@@ -38,7 +39,12 @@ class Screen:
         return self.cursor_x
 
     def drawTable(self, stdscr, list):
-        tableheaderstr = " SYS_ID  TYPE       AUTOPILOT  MODE        STATUS     VERSION".format(0, self.cursor)
+        tableheaderstr = " " + self.table_attr[0] +\
+                         "  " + self.table_attr[1] +\
+                         "  "*7 + self.table_attr[2] +\
+                         "  " + self.table_attr[3]+\
+                         "        " + self.table_attr[4] + "".format(0, self.cursor)
+
         stdscr.attron(curses.color_pair(3))
         stdscr.addstr(self.tablestart_row, 0, tableheaderstr)
         stdscr.addstr(self.tablestart_row, len(tableheaderstr), " " * (self.screen_width - len(tableheaderstr) - 1))
