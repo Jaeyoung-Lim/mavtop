@@ -8,7 +8,7 @@ class Screen:
         self.screen_height = 24
         self.screen_width = 24
         self.key = 0
-        self.table_attr =["SYSID", "TYPE", "AUTOPILOT", "STATUS", "VERSION"]
+        self.table_attr =["SYSID  ", "TYPE       ", "AUTOPILOT  ", "STATUS     ", "MODE     ", "VERSION  "]
 
     def setSize(self, height, width):
         self.screen_height = height
@@ -36,6 +36,10 @@ class Screen:
         stdscr.addstr(self.cursor, 0, " " * self.screen_width)
         stdscr.attroff(curses.color_pair(4))
 
+        if key == curses.KEY_ENTER:
+            self.cursor_x = self.cursor_x
+            # Open subwindow with options
+
 
     def getCursor(self):
         return self.cursor
@@ -44,11 +48,12 @@ class Screen:
         return self.cursor_x
 
     def drawTable(self, stdscr, list):
-        tableheaderstr = " " + self.table_attr[0] +\
-                         "  " + self.table_attr[1] +\
-                         "  "*7 + self.table_attr[2] +\
-                         "  " + self.table_attr[3]+\
-                         "        " + self.table_attr[4] + "".format(0, self.cursor)
+        tableheaderstr = self.table_attr[0] +\
+                         self.table_attr[1] +\
+                         self.table_attr[2] +\
+                         self.table_attr[3]+\
+                         self.table_attr[4] +\
+                         self.table_attr[5] + "".format(0, self.cursor)
 
         stdscr.attron(curses.color_pair(3))
         stdscr.addstr(self.tablestart_row, 0, tableheaderstr)
@@ -56,7 +61,12 @@ class Screen:
         stdscr.attroff(curses.color_pair(3))
 
         for mav_count in range (0, len(list)):
-            mav1str = " "+ str(list[mav_count].sys_id) + "       " + str(list[mav_count].getTypeString()) + "  " + str(list[mav_count].getAutopilotString()) + "        " + str(list[mav_count].getModeString()) + "   " + str(list[mav_count].getStatusString()) + "    " + str(list[mav_count].mavlink_version) + "".format(self.cursor_x, self.cursor)
+            mav1str = str(list[mav_count].sys_id) + " " * (len(self.table_attr[0]) - len(str(list[mav_count].sys_id))) +\
+                      str(list[mav_count].getTypeString()) + " " * (len(self.table_attr[1]) - len(str(list[mav_count].getTypeString()))) +\
+                      str(list[mav_count].getAutopilotString()) + " " * (len(self.table_attr[2]) - len(str(list[mav_count].getAutopilotString()))) +\
+                      str(list[mav_count].getModeString()) + " " * (len(self.table_attr[3]) - len(str(list[mav_count].getModeString()))) +\
+                      str(list[mav_count].getStatusString()) + " " * (len(self.table_attr[4]) - len(str(list[mav_count].getStatusString()))) +\
+                      str(list[mav_count].mavlink_version) + "".format(self.cursor_x, self.cursor)
             stdscr.attron(curses.color_pair(1))
             stdscr.addstr(self.tablestart_row + mav_count + 1, 0, mav1str)
             stdscr.addstr(self.tablestart_row + mav_count + 1, len(mav1str), " " * (self.screen_width - len(mav1str) - 1))
