@@ -65,7 +65,7 @@ def mavlinkThread():
     while True:
         msg = connection.recv_match(type='HEARTBEAT', blocking=True)
 
-        sys_id = 1
+        sys_id = connection.target_system
         vehicle_id = findvehicle(sys_id, list)
         sys_status = msg.system_status
         mav_type = msg.type
@@ -77,7 +77,7 @@ def mavlinkThread():
             vehicle = Vehicle(sys_id, mav_type, mav_autopilot, mav_mode_flag, sys_status, mavlink_version) # Create vehicle object if the vehicle was not seen before
             list.append(vehicle)
         else:
-            list[vehicle_id].sys_id = 1
+            list[vehicle_id].sys_id = sys_id
             list[vehicle_id].mav_state = msg.system_status
 
 def main():
